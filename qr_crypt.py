@@ -21,6 +21,19 @@ import json
 import time 
 
 
+
+# --- Step 1: Generate Key pair (this is Alice)
+private_key = ed25519.Ed25519PrivateKey.generate()
+public_key = private_key.public_key()
+
+# --- Step 2: Save public key in a sharable form (e.g. QR)
+pub_bytes = public_key.public_bytes(
+    encoding=serialization.Encoding.Raw,
+    format=serialization.PublicFormat.Raw
+)
+
+# --- S
+
 ### TO-DO ###
 '''
 1. Add a re-direct feature to popular messaging apps once contacts are verified

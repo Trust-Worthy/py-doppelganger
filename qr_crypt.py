@@ -42,7 +42,7 @@ challenge = f"verify:{nonce}:{timestamp}" # creates challenge string that will b
 print(f"Challenge: {challenge}")
 
 # --- Step 4: Alice sings the challenge
-signed = alice_private_key.sign(challenge.encode)
+signed = alice_private_key.sign(challenge.encode())
 signature_b64 = base64.b64encode(signed).decode()
 # --- Step 5: Package response as a QR
 
@@ -60,7 +60,35 @@ qr.show()
 
 
 
-###
+### Step 7: Bob Verify's response (on-scan)
+def verify_response(payload_json) -> dict:
+    """
+    Parsees a json payload into a python dictionary
+
+    Args:
+        payload_json (_type_): payload containing the pub key, challenge, and signature
+    """
+    data = json.loads(payload_json)
+    return data
+
+### Step 8: Bob reconstructs the original public key from the shared base64 string
+
+try:
+    data = verify_response(payload_json=payload)
+    pub_key = ed25519.Ed25519PublicKey.from_public_bytes(
+        base64.
+        b64decode(data["public_key"])
+    )
+
+    ### Step 9: Bob attempts to verity the signature against the challenge (encoded)
+    pub_key.verify(
+        base64.b64decode(data["signature"]),
+        data["challenge"].encode()
+    )
+    print("✅ Identity verified!")
+except InvalidSignature:
+    print("❌ Verification failed.")
+    ### If they match it means the signer had the private key + message wasn't tampered with
 
 ### TO-DO ###
 '''

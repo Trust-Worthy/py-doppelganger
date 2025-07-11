@@ -39,13 +39,22 @@ challenge = f"verify:{nonce}:{timestamp}"
 # Alice signs the challenge
 signature = base64.b64encode(alice_private.sign(challenge.encode())).decode()
 
-# Send request to Bob
+# DEBUG: Send call request from Alice to Bob
 resp = requests.post("http://localhost:5000/request_call", json={
     "from": "alice",
     "to": "bob",
     "challenge": challenge,
     "signature": signature
 })
+
+print("STATUS CODE:", resp.status_code)
+print("RAW RESPONSE:", resp.text)
+
+try:
+    print("PARSED JSON:", resp.json())
+except Exception as e:
+    print("ERROR parsing JSON:", e)
+
 
 print(resp.json())  # Contains request_id
 request_id = resp.json()["request_id"]
